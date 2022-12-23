@@ -315,24 +315,11 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-void clearLEDPin(uint16_t * pin,int enable){
-	for(int i = 0 ; i < 8; i++){
-		if(i == 0 || i == 3 || i == 4){
-			HAL_GPIO_WritePin(GPIOA, pin[i], enable);
-		}
-		else if(i == 1 || i ==2){
-			HAL_GPIO_WritePin(GPIOB, pin[i], enable);
-		}
-		else{
-			HAL_GPIO_WritePin(GPIOC, pin[i], enable);
-		}
-	}
-}
 
 void clearLED(){
-	clearLEDPin(row_red_pin,0);
-	clearLEDPin(row_green_pin,0);
-	clearLEDPin(col_pin,1);
+	for(int i = 0 ; i < 8; i++){
+		HAL_GPIO_WritePin(Port[i],row_red_pin[i] | row_green_pin[i] | col_pin[i] , 0);
+	}
 }
 
 void updateLEDMatrixBuffer(uint8_t * character){
@@ -341,45 +328,6 @@ void updateLEDMatrixBuffer(uint8_t * character){
 	}
 }
 
-void updatePin(enum status state_current,int index, int enable){
-	switch(state_current){
-	case RED:
-		if(index == 0 || index == 3 || index == 4){
-			HAL_GPIO_WritePin(GPIOA, row_red_pin[index], enable);
-		}
-		else if(index == 1 || index == 2){
-			HAL_GPIO_WritePin(GPIOB, row_red_pin[index], enable);
-		}
-		else{
-			HAL_GPIO_WritePin(GPIOC, row_red_pin[index], enable);
-		}
-		break;
-	case GREEN:
-		if(index == 0 || index == 3 || index == 4){
-			HAL_GPIO_WritePin(GPIOA, row_green_pin[index], enable);
-		}
-		else if(index == 1 || index == 2){
-			HAL_GPIO_WritePin(GPIOB, row_green_pin[index], enable);
-		}
-		else{
-			HAL_GPIO_WritePin(GPIOC, row_green_pin[index], enable);
-		}
-		break;
-	default: break;
-	}
-}
-
-void updateColPin(int index,int enable){
-	if(index == 0 || index == 3 || index == 4){
-		HAL_GPIO_WritePin(GPIOA, col_pin[index], enable);
-	}
-	else if(index == 1 || index == 2){
-		HAL_GPIO_WritePin(GPIOB, col_pin[index], enable);
-	}
-	else{
-		HAL_GPIO_WritePin(GPIOC, col_pin[index], enable);
-	}
-}
 
 void updateLEDMatrix(int index, enum status state_current,enum direction flow) {
 	clearLED();
@@ -391,7 +339,6 @@ void updateLEDMatrix(int index, enum status state_current,enum direction flow) {
 		case HOR:
 			for(int i = 0; i < 8; i++) {
 				if(matrix_buffer[index] & (0x80 >> i)) {
-//					updatePin(RED,i,1);
 					HAL_GPIO_WritePin(Port[i],row_red_pin[i],1);
 				}
 			}
@@ -399,7 +346,6 @@ void updateLEDMatrix(int index, enum status state_current,enum direction flow) {
 		case VER_REV:
 			for(int i = 0; i < 8; i++) {
 				if(matrix_buffer[index] & (0x01 << i)) {
-					updatePin(RED,i,1);
 					HAL_GPIO_WritePin(Port[i],row_red_pin[i],1);
 				}
 			}
@@ -407,7 +353,6 @@ void updateLEDMatrix(int index, enum status state_current,enum direction flow) {
 		case HOR_REV:
 			for(int i = 0; i < 8; i++) {
 				if(matrix_buffer[7-index] & (0x80 >> i)) {
-//					updatePin(RED,i,1);
 					HAL_GPIO_WritePin(Port[i],row_red_pin[i],1);
 				}
 			}
@@ -420,7 +365,6 @@ void updateLEDMatrix(int index, enum status state_current,enum direction flow) {
 		case HOR:
 			for(int i = 0; i < 8; i++) {
 				if(matrix_buffer[index] & (0x80 >> i)) {
-//					updatePin(GREEN,i,1);
 					HAL_GPIO_WritePin(Port[i],row_green_pin[i],1);
 				}
 			}
@@ -428,7 +372,6 @@ void updateLEDMatrix(int index, enum status state_current,enum direction flow) {
 		case VER_REV:
 			for(int i = 0; i < 8; i++) {
 				if(matrix_buffer[index] & (0x01 << i)) {
-//					updatePin(GREEN,i,1);
 					HAL_GPIO_WritePin(Port[i],row_green_pin[i],1);
 				}
 			}
@@ -436,7 +379,6 @@ void updateLEDMatrix(int index, enum status state_current,enum direction flow) {
 		case HOR_REV:
 			for(int i = 0; i < 8; i++) {
 				if(matrix_buffer[7-index] & (0x80 >> i)) {
-//					updatePin(GREEN,i,1);
 					HAL_GPIO_WritePin(Port[i],row_green_pin[i],1);
 				}
 			}
@@ -450,12 +392,10 @@ void updateLEDMatrix(int index, enum status state_current,enum direction flow) {
 			for(int i = 0; i < 8; i++) {
 				if(matrix_buffer[index] & (0x80 >> i)) {
 					if(flag_led){
-//						updatePin(GREEN,i,1);
 						HAL_GPIO_WritePin(Port[i],row_green_pin[i],1);
 						flag_led = 0;
 					}
 					else{
-//						updatePin(RED,i,1);
 						HAL_GPIO_WritePin(Port[i],row_red_pin[i],1);
 						flag_led = 1;
 					}
@@ -466,12 +406,10 @@ void updateLEDMatrix(int index, enum status state_current,enum direction flow) {
 			for(int i = 0; i < 8; i++) {
 				if(matrix_buffer[index] & (0x01 << i)) {
 					if(flag_led){
-//						updatePin(GREEN,i,1);
 						HAL_GPIO_WritePin(Port[i],row_green_pin[i],1);
 						flag_led = 0;
 					}
 					else{
-//						updatePin(RED,i,1);
 						HAL_GPIO_WritePin(Port[i],row_red_pin[i],1);
 						flag_led = 1;
 					}
@@ -482,12 +420,10 @@ void updateLEDMatrix(int index, enum status state_current,enum direction flow) {
 			for(int i = 0; i < 8; i++) {
 				if(matrix_buffer[7-index] & (0x80 >> i)) {
 					if(flag_led){
-//						updatePin(GREEN,i,1);
 						HAL_GPIO_WritePin(Port[i],row_green_pin[i],1);
 						flag_led = 0;
 					}
 					else{
-//						updatePin(RED,i,1);
 						HAL_GPIO_WritePin(Port[i],row_red_pin[i],1);
 						flag_led = 1;
 					}
@@ -498,7 +434,6 @@ void updateLEDMatrix(int index, enum status state_current,enum direction flow) {
 		break;
 	default: break;
 	}
-//	updateColPin(index,0);
 	HAL_GPIO_WritePin(Port[index],col_pin[index],0);
 }
 
