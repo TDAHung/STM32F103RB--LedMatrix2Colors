@@ -147,23 +147,28 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-	  if(timer_flag[0]){
-		  timer_flag[0] = 0;
-		  setTimer(0,200);
-		  if(is_First) is_First = 0;
-		  else{
-			  shiftLeftMatrix();
-//			  shiftUpMatrix();
-//			  shiftDownMatrix();
-//			  shiftRightMatrix();
-		  }
-	  }
-
-	  if(timer_flag[1]) {
-		  timer_flag[1] = 0;
-		  setTimer(1,2);
-		  updateLEDMatrix(index_col_led_matrix++,curent_state,flow);
-		  if(index_col_led_matrix == MAX_LED_MATRIX) index_col_led_matrix = 0;
+//	  if(timer_flag[0]){
+//		  timer_flag[0] = 0;
+//		  setTimer(0,200);
+//		  if(is_First) is_First = 0;
+//		  else{
+//			  shiftLeftMatrix();
+////			  shiftUpMatrix();
+////			  shiftDownMatrix();
+////			  shiftRightMatrix();
+//		  }
+//	  }
+//
+//	  if(timer_flag[1]) {
+//		  timer_flag[1] = 0;
+//		  setTimer(1,2);
+//		  updateLEDMatrix(index_col_led_matrix++,curent_state,flow);
+//		  if(index_col_led_matrix == MAX_LED_MATRIX) index_col_led_matrix = 0;
+//	  }
+	  for(int i = 0 ; i < 8; i++){
+		  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_7,0);
+		  HAL_GPIO_WritePin(Port[i],row_green_pin[i],1);
+		  HAL_Delay(1000);
 	  }
     /* USER CODE BEGIN 3 */
   }
@@ -190,6 +195,7 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+
   /** Initializes the CPU, AHB and APB buses clocks
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
@@ -271,8 +277,7 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_2|GPIO_PIN_3|GPIO_PIN_5|GPIO_PIN_6
-                          |EN_ROW1_Pin|EN_ROW4_Pin|GPIO_PIN_13|GPIO_PIN_14
-                          |EN_ROW6_Pin, GPIO_PIN_RESET);
+                          |EN_ROW1_Pin|EN_ROW4_Pin|EN_ROW6_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1|GPIO_PIN_2|EN_ROW3_Pin|GPIO_PIN_14
@@ -290,11 +295,9 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PA2 PA3 PA5 PA6
-                           EN_ROW1_Pin EN_ROW4_Pin PA13 PA14
-                           EN_ROW6_Pin */
+                           EN_ROW1_Pin EN_ROW4_Pin EN_ROW6_Pin */
   GPIO_InitStruct.Pin = GPIO_PIN_2|GPIO_PIN_3|GPIO_PIN_5|GPIO_PIN_6
-                          |EN_ROW1_Pin|EN_ROW4_Pin|GPIO_PIN_13|GPIO_PIN_14
-                          |EN_ROW6_Pin;
+                          |EN_ROW1_Pin|EN_ROW4_Pin|EN_ROW6_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -581,5 +584,3 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

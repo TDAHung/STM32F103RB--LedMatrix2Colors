@@ -74,6 +74,7 @@ void Error_Handler(void);
 #define EN_ROW5_GPIO_Port GPIOC
 #define EN_ROW2_Pin GPIO_PIN_6
 #define EN_ROW2_GPIO_Port GPIOB
+
 /* USER CODE BEGIN Private defines */
 
 #define EN_ROW1_Port GPIOA
@@ -108,5 +109,3 @@ void Error_Handler(void);
 #endif
 
 #endif /* __MAIN_H */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
