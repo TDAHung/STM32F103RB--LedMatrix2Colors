@@ -338,7 +338,7 @@ void updateLEDMatrix(int index, enum status state_current,enum direction flow) {
 		case VER:
 		case HOR:
 			for(int i = 0; i < MAX_LED_MATRIX; i++) {
-				if(matrix_buffer[index] & (0x80 >> i)) {
+				if(matrix_buffer[index] & (0x01 << i)) {
 					HAL_GPIO_WritePin(Port[i],row_red_pin[i],1);
 				}
 			}
@@ -352,7 +352,7 @@ void updateLEDMatrix(int index, enum status state_current,enum direction flow) {
 			break;
 		case HOR_REV:
 			for(int i = 0; i < MAX_LED_MATRIX; i++) {
-				if(matrix_buffer[7-index] & (0x80 >> i)) {
+				if(matrix_buffer[7-index] & (0x01 << i)) {
 					HAL_GPIO_WritePin(Port[i],row_red_pin[i],1);
 				}
 			}
@@ -364,7 +364,7 @@ void updateLEDMatrix(int index, enum status state_current,enum direction flow) {
 		case VER:
 		case HOR:
 			for(int i = 0; i < MAX_LED_MATRIX; i++) {
-				if(matrix_buffer[index] & (0x80 >> i)) {
+				if(matrix_buffer[index] & (0x01 >> i)) {
 					HAL_GPIO_WritePin(Port[i],row_green_pin[i],1);
 				}
 			}
@@ -378,7 +378,7 @@ void updateLEDMatrix(int index, enum status state_current,enum direction flow) {
 			break;
 		case HOR_REV:
 			for(int i = 0; i < MAX_LED_MATRIX; i++) {
-				if(matrix_buffer[7-index] & (0x80 >> i)) {
+				if(matrix_buffer[7-index] & (0x01 << i)) {
 					HAL_GPIO_WritePin(Port[i],row_green_pin[i],1);
 				}
 			}
@@ -390,7 +390,7 @@ void updateLEDMatrix(int index, enum status state_current,enum direction flow) {
 		case VER:
 		case HOR:
 			for(int i = 0; i < MAX_LED_MATRIX; i++) {
-				if(matrix_buffer[index] & (0x80 >> i)) {
+				if(matrix_buffer[index] & (0x01 << i)) {
 					if(flag_led){
 						HAL_GPIO_WritePin(Port[i],row_green_pin[i],1);
 						flag_led = 0;
@@ -418,7 +418,7 @@ void updateLEDMatrix(int index, enum status state_current,enum direction flow) {
 			break;
 		case HOR_REV:
 			for(int i = 0; i < MAX_LED_MATRIX; i++) {
-				if(matrix_buffer[7-index] & (0x80 >> i)) {
+				if(matrix_buffer[7-index] & (0x01 << i)) {
 					if(flag_led){
 						HAL_GPIO_WritePin(Port[i],row_green_pin[i],1);
 						flag_led = 0;
