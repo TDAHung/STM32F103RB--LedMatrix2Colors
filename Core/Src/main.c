@@ -165,7 +165,7 @@ int main(void)
 //		  updateLEDMatrix(index_col_led_matrix++,curent_state,flow);
 //		  if(index_col_led_matrix == MAX_LED_MATRIX) index_col_led_matrix = 0;
 //	  }
-	  for(int i = 0 ; i < 8; i++){
+	  for(int i = 0 ; i < MAX_LED_MATRIX; i++){
 		  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_7,0);
 		  HAL_GPIO_WritePin(Port[i],row_green_pin[i],1);
 		  HAL_Delay(1000);
@@ -317,13 +317,13 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 
 void clearLED(){
-	for(int i = 0 ; i < 8; i++){
+	for(int i = 0 ; i < MAX_LED_MATRIX; i++){
 		HAL_GPIO_WritePin(Port[i],row_red_pin[i] | row_green_pin[i] | col_pin[i] , 0);
 	}
 }
 
 void updateLEDMatrixBuffer(uint8_t * character){
-	for(int i = 0 ; i < 8; i++){
+	for(int i = 0 ; i < MAX_LED_MATRIX; i++){
 		matrix_buffer[i] = character[i];
 	}
 }
@@ -337,21 +337,21 @@ void updateLEDMatrix(int index, enum status state_current,enum direction flow) {
 		switch(flow){
 		case VER:
 		case HOR:
-			for(int i = 0; i < 8; i++) {
+			for(int i = 0; i < MAX_LED_MATRIX; i++) {
 				if(matrix_buffer[index] & (0x80 >> i)) {
 					HAL_GPIO_WritePin(Port[i],row_red_pin[i],1);
 				}
 			}
 			break;
 		case VER_REV:
-			for(int i = 0; i < 8; i++) {
+			for(int i = 0; i < MAX_LED_MATRIX; i++) {
 				if(matrix_buffer[index] & (0x01 << i)) {
 					HAL_GPIO_WritePin(Port[i],row_red_pin[i],1);
 				}
 			}
 			break;
 		case HOR_REV:
-			for(int i = 0; i < 8; i++) {
+			for(int i = 0; i < MAX_LED_MATRIX; i++) {
 				if(matrix_buffer[7-index] & (0x80 >> i)) {
 					HAL_GPIO_WritePin(Port[i],row_red_pin[i],1);
 				}
@@ -363,21 +363,21 @@ void updateLEDMatrix(int index, enum status state_current,enum direction flow) {
 		switch(flow){
 		case VER:
 		case HOR:
-			for(int i = 0; i < 8; i++) {
+			for(int i = 0; i < MAX_LED_MATRIX; i++) {
 				if(matrix_buffer[index] & (0x80 >> i)) {
 					HAL_GPIO_WritePin(Port[i],row_green_pin[i],1);
 				}
 			}
 			break;
 		case VER_REV:
-			for(int i = 0; i < 8; i++) {
+			for(int i = 0; i < MAX_LED_MATRIX; i++) {
 				if(matrix_buffer[index] & (0x01 << i)) {
 					HAL_GPIO_WritePin(Port[i],row_green_pin[i],1);
 				}
 			}
 			break;
 		case HOR_REV:
-			for(int i = 0; i < 8; i++) {
+			for(int i = 0; i < MAX_LED_MATRIX; i++) {
 				if(matrix_buffer[7-index] & (0x80 >> i)) {
 					HAL_GPIO_WritePin(Port[i],row_green_pin[i],1);
 				}
@@ -389,7 +389,7 @@ void updateLEDMatrix(int index, enum status state_current,enum direction flow) {
 		switch(flow){
 		case VER:
 		case HOR:
-			for(int i = 0; i < 8; i++) {
+			for(int i = 0; i < MAX_LED_MATRIX; i++) {
 				if(matrix_buffer[index] & (0x80 >> i)) {
 					if(flag_led){
 						HAL_GPIO_WritePin(Port[i],row_green_pin[i],1);
@@ -403,7 +403,7 @@ void updateLEDMatrix(int index, enum status state_current,enum direction flow) {
 			}
 			break;
 		case VER_REV:
-			for(int i = 0; i < 8; i++) {
+			for(int i = 0; i < MAX_LED_MATRIX; i++) {
 				if(matrix_buffer[index] & (0x01 << i)) {
 					if(flag_led){
 						HAL_GPIO_WritePin(Port[i],row_green_pin[i],1);
@@ -417,7 +417,7 @@ void updateLEDMatrix(int index, enum status state_current,enum direction flow) {
 			}
 			break;
 		case HOR_REV:
-			for(int i = 0; i < 8; i++) {
+			for(int i = 0; i < MAX_LED_MATRIX; i++) {
 				if(matrix_buffer[7-index] & (0x80 >> i)) {
 					if(flag_led){
 						HAL_GPIO_WritePin(Port[i],row_green_pin[i],1);
@@ -439,18 +439,18 @@ void updateLEDMatrix(int index, enum status state_current,enum direction flow) {
 
 void shiftRightMatrix() {
 	uint8_t old = matrix_buffer[0];
-	for(int i = 0 ; i < 8; i++)  matrix_buffer[i] = matrix_buffer[i+1];
+	for(int i = 0 ; i < MAX_LED_MATRIX; i++)  matrix_buffer[i] = matrix_buffer[i+1];
 	matrix_buffer[7] = old;
 }
 
 void shiftLeftMatrix(){
-	uint8_t old = matrix_buffer[7];
-	for(int i = 7; i > 0; i--) matrix_buffer[i] = matrix_buffer[i-1];
+	uint8_t old = matrix_buffer[MAX_LED_MATRIX - 1];
+	for(int i = MAX_LED_MATRIX - 1; i > 0; i--) matrix_buffer[i] = matrix_buffer[i-1];
 	matrix_buffer[0] = old;
 }
 
 void shiftUpMatrix(){
-	for(int i = 0; i < 8; i++){
+	for(int i = 0; i < MAX_LED_MATRIX; i++){
 		int b = matrix_buffer[i] & 0x01;
 		matrix_buffer[i] >>= 1;
 		if(b == 1) matrix_buffer[i] = matrix_buffer[i] | (1 << 7);
@@ -459,7 +459,7 @@ void shiftUpMatrix(){
 }
 
 void shiftDownMatrix(){
-	for(int i = 0; i < 8; i++){
+	for(int i = 0; i < MAX_LED_MATRIX; i++){
 		int b = matrix_buffer[i] & 0x80;
 		matrix_buffer[i] <<= 1;
 		if(b == 128) matrix_buffer[i] = matrix_buffer[i] | (1 << 0);
